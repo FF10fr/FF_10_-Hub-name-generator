@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Name Initials Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #ff69b4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        input, button {
+            padding: 15px;
+            margin: 8px;
+            border-radius: 5px;
+            border: 2px solid #ff69b4;
+            background-color: #1a1a1a;
+            color: #ff69b4;
+            font-size: 16px;
+            width: 320px;
+            max-width: 90vw;
+        }
+        input::placeholder {
+            color: #ff69b4aa;
+        }
+        button {
+            background-color: #ff69b4;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            width: 160px;
+        }
+        button:hover {
+            background-color: #ff1493;
+            color: white;
+        }
+        #output {
+            margin-top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff69b4;
+        }
+        h1 {
+            text-shadow: 0 0 10px #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💀 Name Initials Generator 💀</h1>
+
+    <input type="text" id="nameInput" placeholder="Type your real name" />
+    <input type="number" id="yearInput" placeholder="Add the year you were born" />
+    <button onclick="generateShortName()">Generate</button>
+    <button onclick="downloadResult()">Download as TXT</button>
+
+    <div id="output"></div>
+
+    <script>
+        const letterMap = {
+            'A': 'Δ', 'B': 'β', 'C': 'Ć', 'D': 'Đ', 'E': '€', 'F': '₣', 'G': 'Ǥ', 'H': 'Ħ', 'I': 'Ɨ', 'J': 'Ĵ',
+            'K': 'Ҝ', 'L': 'Ł', 'M': 'Μ', 'N': 'Ň', 'O': 'Ø', 'P': 'Ƥ', 'Q': 'Ω', 'R': 'Ř', 'S': 'Ş', 'T': 'Ŧ',
+            'U': 'Ữ', 'V': 'V', 'W': 'Ŵ', 'X': 'Ж', 'Y': '¥', 'Z': 'Ž'
+        };
+
+        let lastResult = '';
+
+        function generateShortName() {
+            const name = document.getElementById('nameInput').value.trim();
+            const year = document.getElementById('yearInput').value.trim();
+
+            if (name === '' || year === '') {
+                document.getElementById('output').innerText = "⚠️ Please enter both name and year!";
+                lastResult = '';
+                return;
+            }
+
+            const nameParts = name.split(' ');
+            let initials = '';
+
+            for (let part of nameParts) {
+                if (part.length > 0) {
+                    let letter = part.charAt(0).toUpperCase();
+                    initials += letterMap[letter] || letter;
+                }
+            }
+
+            const yearSuffix = year.slice(-2);
+            const result = `${initials}_${yearSuffix}_`;
+
+            document.getElementById('output').innerText = result;
+            lastResult = result;
+        }
+
+        function downloadResult() {
+            if (lastResult === '') {
+                alert("Please generate a name first!");
+                return;
+            }
+
+            const blob = new Blob([lastResult], { type: "text/plain" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "name_initials.txt";
+            document.body.appendChild(a);
+            a.click();
+
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+</html>
